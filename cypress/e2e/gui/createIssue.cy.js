@@ -1,7 +1,8 @@
 import { faker } from '@faker-js/faker';
 
+const options = { env: { snapshotOnly: true } }
 
-describe('Create issue for new project', () => {
+describe('Create issue for new project', options, () => {
     beforeEach(() => {
         cy.login();
         cy.api_deleteProjects();
@@ -28,28 +29,24 @@ describe('Create issue for existing project', () => {
     beforeEach(() => {
         cy.login();
         cy.visit('');
+        cy.api_deleteProjects();
       })
-    
-    it('successfully', () => {
-        cy.api_getAllProjects().then((res) => {
-            const projects = res.body;
-            const randomIndex = Math.floor(Math.random() * projects.length);
-            const randomProject = projects[randomIndex];
-            cy.wrap(randomProject).as('randomProject');
-        })
 
-        cy.get('@randomProject').then((project) => {
+      it('successfully', () => {
+        cy.ensureAtLeastOneProject().then((project) => {
             const issue = {
                 project: {
-                    name: project.name,
-                    description: project.description
+                  name: project.name,
+                  description: project.description
                 },
-                title: `issue-${faker.datatype.uuid()}`,
-                description: faker.lorem.words(10),
-            }  
+              title: `issue-${faker.datatype.uuid()}`,
+              description: faker.lorem.words(10),
+            };
+
             cy.gui_createIssue(issue);
-            cy.contains(issue.description).should('be.visible');
+
             cy.contains(issue.title).should('be.visible');
+            cy.contains(issue.description).should('be.visible');
         })
     })
 })
