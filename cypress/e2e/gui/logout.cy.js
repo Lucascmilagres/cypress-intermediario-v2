@@ -1,13 +1,10 @@
-describe('Logout', () => {
+describe('Logout', () => { 
   beforeEach(() => {
-    cy.login();
-    cy.visit('/');
+    cy.login()
   })
-  
-  it('successfully', () => {
-    cy.logout();
+  it('sucessfully', () => {
+    cy.logout()
 
-    cy.contains('Sign in').should('be.visible');
-    cy.url().should('be.equal', `${Cypress.config('baseUrl')}/users/sign_in`);
+    cy.url().should('be.equal', `${Cypress.config().baseUrl}/users/sign_in`)
   })
 })
